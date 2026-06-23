@@ -12,7 +12,7 @@ pre-commit:
 pre-push:
   commands:
     quality-and-tests:
-      run: ./gradlew detektAll :core:allTests :composeApp:allTests --stacktrace
+      run: ./gradlew detektAll :core:allTests :shared:allTests --stacktrace
     android-and-web:
       run: ./gradlew :androidApp:lintDebug :androidApp:assembleDebug --stacktrace
     # ios-simulator:
