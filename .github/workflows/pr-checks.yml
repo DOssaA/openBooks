@@ -1,0 +1,114 @@
+name: pr-checks
+
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint GitHub Actions workflows
+        uses: rhysd/actionlint@v1
+
+  wrapper-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v5
+
+  shared-quality: # detekt, ktlint, tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Run shared quality gates and common tests
+        run: ./gradlew detektAll ktlintAll :shared:allTests --stacktrace
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-quality-reports
+          path: |
+            **/build/reports/detekt/*.html
+            **/build/reports/detekt/*.sarif
+            **/build/reports/ktlint/**/*.*
+            **/build/test-results/**/*.xml
+            **/build/reports/tests/**/*
+
+  target-verification:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include: # it can include ios target in the future
+          - target: android-web
+            os: ubuntu-latest
+            gradle_tasks: :androidApp:lintDebug :androidApp:assembleDebug
+            uses_xcodebuild: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Run target verification
+        if: ${{ !matrix.uses_xcodebuild }}
+        run: ./gradlew ${{ matrix.gradle_tasks }} --stacktrace
+
+      - name: Build iOS app for simulator  # for ios target in the future
+        if: ${{ matrix.uses_xcodebuild }}
+        run: |
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Upload target reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}-reports
+          path: |
+            **/build/reports/**/*
+            iosApp/build/**/*
