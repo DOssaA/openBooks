@@ -4,27 +4,31 @@ package com.darioossa.openbooks.navigation
 
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 
+@Composable
 fun EntryProviderScope<Route>.BooksListEntry() {
     entry<BooksList>(
-        metadata = ListDetailSceneStrategy.listPane()
+        metadata = ListDetailSceneStrategy.listPane(),
     ) {
         // Screen content
     }
 }
 
+@Composable
 fun EntryProviderScope<Route>.BookDetailEntry() {
     entry<BookDetail>(
-        metadata = ListDetailSceneStrategy.detailPane()
+        metadata = ListDetailSceneStrategy.detailPane(),
     ) { book ->
         // Screen content
     }
 }
 
+@Composable
 fun EntryProviderScope<Route>.FavoritesEntry() {
     entry<FavoritesList>(
-        metadata = ListDetailSceneStrategy.extraPane()
+        metadata = ListDetailSceneStrategy.extraPane(),
     ) {
         // Screen content
     }

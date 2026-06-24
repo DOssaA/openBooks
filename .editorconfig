@@ -1,0 +1,20 @@
+root = true
+
+# Disable ktlint entirely for all build and generated folders
+[**/build/**]
+ktlint = disabled
+
+[**/generated/**]
+ktlint = disabled
+
+[*.{kt,kts}]
+ktlint_function_naming_ignore_when_annotated_with = Composable
+
+[**/build.gradle.kts]
+# Disables the specific rule causing newline issues on dot-qualified expressions
+ktlint_standard_property-naming = disabled
+ktlint_standard_chain-wrapping = disabled
+
+[**/build.gradle]
+ktlint_standard_property-naming = disabled
+ktlint_standard_chain-wrapping = disabled
