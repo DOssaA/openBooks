@@ -1,0 +1,3 @@
+# Ktor Client instead of Retrofit for networking
+
+The technical challenge lists Retrofit as a mandatory networking library, but also explicitly permits substituting libraries when justified in the README. Because the project is built on Compose Multiplatform with a `commonMain`-pure data layer, and Retrofit is JVM/Android-only, we use **Ktor Client** (the KMP-native equivalent) so networking stays in `commonMain`. Retrofit is not in the challenge's list of "red flags," and keeping the data layer multiplatform serves the "architecture / scalability" evaluation criterion better than placing Retrofit in `androidMain` to honor the letter of one bullet.
