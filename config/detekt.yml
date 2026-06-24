@@ -1,0 +1,22 @@
+config:
+  validation: true
+  warningsAsErrors: false
+  checkExhaustiveness: false
+  # when writing own rules with new properties, exclude the property path e.g.: "excludes: ['my_rule_set', '.*>.*>[my_property]']"
+naming:
+  FunctionNaming:
+    ignoreAnnotated: [ 'Composable' ]
+
+style:
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated: [ 'DevicePreviews', 'Preview' ]
+  MaxLineLength:
+    excludes: [ "**/test/**","**/androidTest/**" ]
+  MagicNumber:
+    excludes: [ "**/test/**","**/androidTest/**" ]
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+
+build:
+  maxIssues: 10
