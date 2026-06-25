@@ -3,7 +3,6 @@ package com.darioossa.openbooks.presentation.bookDetail
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,11 +23,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.darioossa.openbooks.domain.entities.Book
+import openbooks.shared.generated.resources.Res
+import openbooks.shared.generated.resources.detail_cover_cd
+import openbooks.shared.generated.resources.detail_error
+import openbooks.shared.generated.resources.detail_favorite_add
+import openbooks.shared.generated.resources.detail_favorite_added
+import openbooks.shared.generated.resources.detail_first_published
+import openbooks.shared.generated.resources.detail_no_description
+import openbooks.shared.generated.resources.detail_retry
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+
+private val ScreenPadding: Dp = 16.dp
+private val SectionGap: Dp = 12.dp
+private val CoverWidth: Dp = 160.dp
+private val CoverHeight: Dp = 240.dp
+private val CoverCorner: Dp = 12.dp
+private val PlaceholderPadding: Dp = 8.dp
 
 @Composable
 fun BookDetailScreen(
@@ -44,8 +60,13 @@ fun BookDetailScreen(
         DetailState.Error ->
             CenteredBox(modifier) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Couldn't load this book.", style = MaterialTheme.typography.bodyLarge)
-                    FilledTonalButton(onClick = { viewModel.onBookOpened(book) }) { Text("Retry") }
+                    Text(
+                        text = stringResource(Res.string.detail_error),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    FilledTonalButton(onClick = { viewModel.onBookOpened(book) }) {
+                        Text(stringResource(Res.string.detail_retry))
+                    }
                 }
             }
         is DetailState.Success ->
@@ -70,8 +91,8 @@ private fun DetailContent(
             modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(ScreenPadding),
+        verticalArrangement = Arrangement.spacedBy(SectionGap),
     ) {
         Cover(coverUrl = book.coverUrl, title = book.title)
 
@@ -86,20 +107,21 @@ private fun DetailContent(
 
         book.firstPublishYear?.let { year ->
             Text(
-                text = "First published $year",
+                text = stringResource(Res.string.detail_first_published, year),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
         FilledTonalButton(onClick = onToggleFavorite, modifier = Modifier.fillMaxWidth()) {
-            Text(if (isFavorite) "♥ In favorites" else "♡ Add to favorites")
+            val label = if (isFavorite) Res.string.detail_favorite_added else Res.string.detail_favorite_add
+            Text(stringResource(label))
         }
 
-        Text(
-            text = book.description?.takeIf { it.isNotBlank() } ?: "No description available.",
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        val description =
+            book.description?.takeIf { it.isNotBlank() }
+                ?: stringResource(Res.string.detail_no_description)
+        Text(text = description, style = MaterialTheme.typography.bodyLarge)
     }
 }
 
@@ -108,32 +130,27 @@ private fun Cover(
     coverUrl: String?,
     title: String,
 ) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(CoverCorner)
+    val coverModifier = Modifier.size(width = CoverWidth, height = CoverHeight).clip(shape)
     if (coverUrl != null) {
         AsyncImage(
             model = coverUrl,
-            contentDescription = "Cover of $title",
+            contentDescription = stringResource(Res.string.detail_cover_cd, title),
             contentScale = ContentScale.Fit,
-            modifier =
-                Modifier
-                    .size(width = 160.dp, height = 240.dp)
-                    .clip(shape),
+            modifier = coverModifier,
         )
     } else {
         Surface(
             shape = shape,
             color = MaterialTheme.colorScheme.surfaceVariant,
-            modifier =
-                Modifier
-                    .size(width = 160.dp, height = 240.dp)
-                    .aspectRatio(2f / 3f),
+            modifier = coverModifier,
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(PlaceholderPadding),
                 )
             }
         }
