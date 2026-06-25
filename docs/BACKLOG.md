@@ -8,7 +8,7 @@ See [agents.md](../agents.md) for architecture, [CONTEXT.md](../CONTEXT.md) for 
 
 **GitHub-PR workflow** — `main` is the protected, always-green trunk:
 
-- One **feature branch per issue**, pushed to GitHub; open a **real PR** into `main`. The PR must pass `pr-checks` before merge; squash-merge to keep history clean.
+- One **feature branch per issue**, named `feature/issue-<n>-<slug>` (e.g. `feature/issue-1-search-list`), pushed to GitHub; open a **real PR** into `main`. The PR must pass `pr-checks` before merge; squash-merge to keep history clean.
 - Put the issue's acceptance criteria in the PR body so intent is reviewable (solo self-merge is fine).
 - `pr-checks` runs four parallel jobs — `actionlint`, Gradle wrapper validation, `shared-quality` (`detektAll ktlintAll :shared:allTests`), and `target-verification` (`:androidApp:lintDebug :androidApp:assembleDebug`). Budget **~5–10 min** wall-clock per PR; work the next branch while CI runs.
 - **PR #1 carries the existing scaffolding.** All current work sits uncommitted on `feature/bookList`, so PR #1 ≈ scaffolding + Issue 1 + Issue 2. Go granular only from Issue 3 onward — don't retro-split the scaffolding.
@@ -24,19 +24,28 @@ See [agents.md](../agents.md) for architecture, [CONTEXT.md](../CONTEXT.md) for 
 
 ---
 
-## Issue 1 — Re-spec ViewModel tests for the empty initial state + wire search use case
-**Labels:** `test` `refactor` `priority:1` · **Branch:** `feature/bookList` (current) · **Depends on:** —
+## Issue 1 — Search-driven ViewModel + re-spec tests (empty initial state)
+**Labels:** `test` `feature` `priority:1` · **Branch:** `feature/issue-1-search-list` (current) · **Depends on:** —
 
-The existing `BooksListViewModelTest` asserts auto-load-on-`init` (`Loading → Success`) — the behaviour we discarded. Re-specify it for the search-driven flow.
+Replace the discarded auto-load-on-`init` behaviour with a **reactive, search-driven** ViewModel and re-spec its tests. PR #1 also carries the scaffolding + Issue 2 (package swap).
+
+**Status: ✅ done.** VM is reactive; 4 tests green; `detektAll ktlintAll :shared:allTests :androidApp:lintDebug assembleDebug` all pass locally.
 
 **Acceptance criteria**
-- [ ] Initial state is `Idle`/`Empty` (no network call on `init`).
-- [ ] `GetBooksUseCase` takes a **query** (becomes a search use case).
-- [ ] Test: empty query → stays `Empty`; non-empty query → `Loading → Success(list)`.
-- [ ] Test: query → `Loading → Error` on failure.
-- [ ] Test: query with zero results → `Empty`.
-- [ ] `BooksListViewModel` consumes the use case; `initViewModel()` injects the mock.
-- [ ] Tests green.
+- [x] Initial state is `Empty` (no network call on `init`).
+- [x] Use case takes a **query** (`SearchBooksUseCase`).
+- [x] **Reactive VM:** `MutableStateFlow<query>` → `debounce` → `flatMapLatest { searchBooks }` (auto-cancels stale searches) → `map` to `ListState` → `stateIn(WhileSubscribed(5s))`. No manual `Job`.
+- [x] Test: empty query → stays `Empty`; non-empty → `Loading → Success(list)`.
+- [x] Test: query → `Loading → Error` on failure.
+- [x] Test: query with zero results → `Empty`.
+- [x] Tests green.
+
+**Emergent fixes folded into PR #1 (not originally listed):**
+- **Case bug:** the `androidMain` tree was `com/darioossa/openBooks/` (capital B) with `MainApp.kt` in `package …openBooks.di`; on case-insensitive macOS the compile jar then broke case-sensitive classpath resolution for `…openbooks` imports. Renamed to lowercase `openbooks` everywhere.
+- **Koin DI:** project uses the **Koin compiler plugin** (4.2). Its compile-time check (`KOIN-D001`) only tracks definitions written with the plugin DSL (`org.koin.plugin.module.dsl.*`): `single<T>()`, `factory<T>()`, `viewModel<T>()`, `.bind(X::class)` — standard `singleOf`/`factoryOf` are invisible to it. Rewrote `Modules.kt` accordingly; dropped `SearchBooksUseCase`'s dispatcher param (plugin can't construct a `CoroutineDispatcher`). Kept `includes()` so each module passes `Module.verify()` in isolation.
+- **Lint:** cleaned scaffolding detekt/ktlint issues (empty stubs, trailing newlines, `@Suppress` + TODO on Issue-5/7 placeholders).
+
+**Note:** `MainApp` is still **not** wired in `androidApp/.../AndroidManifest.xml` (`android:name` missing), so Koin doesn't start on Android yet — wire it when the app first runs (Issue 7).
 
 ## Issue 2 — Fix swapped `data/local` ↔ `data/remote` packages
 **Labels:** `chore` `priority:1` · **Depends on:** —  *(tracked as a background task already)*
