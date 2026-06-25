@@ -130,7 +130,7 @@ private val SHIMMER_YEAR_HEIGHT = 12.dp
 @Composable
 fun BookListScreen(
     viewModel: BooksListViewModel = koinViewModel(),
-    onBookClick: (String) -> Unit = {},
+    onBookClick: (Book) -> Unit = {},
     onFavoritesClick: () -> Unit = {},
 ) {
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -241,7 +241,7 @@ private fun BookListStateContent(
     state: ListState,
     query: String,
     favoriteKeys: Set<String>,
-    onBookClick: (String) -> Unit,
+    onBookClick: (Book) -> Unit,
     onToggleFavorite: (Book) -> Unit,
     onSearch: (String) -> Unit,
     onLoadNextPage: () -> Unit,
@@ -285,7 +285,7 @@ private fun BookListLoadingView() {
 private fun BookListSuccessContent(
     state: ListState.Success,
     favoriteKeys: Set<String>,
-    onBookClick: (String) -> Unit,
+    onBookClick: (Book) -> Unit,
     onToggleFavorite: (Book) -> Unit,
     onLoadNextPage: () -> Unit,
 ) {
@@ -320,7 +320,7 @@ private fun BookListSuccessContent(
                 book = book,
                 isFavorite = isFavorite,
                 onToggleFavorite = { onToggleFavorite(book) },
-                onClick = { onBookClick(book.key) },
+                onClick = { onBookClick(book) },
                 modifier =
                     Modifier.padding(
                         horizontal = Dimens.paddingLarge,
