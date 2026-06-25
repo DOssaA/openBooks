@@ -10,6 +10,8 @@ interface BooksDataSource {
         page: Int,
     ): Flow<SearchBooksPage>
 
+    suspend fun getBook(key: String): Book
+
     fun observeFavoriteKeys(): Flow<Set<String>>
 
     suspend fun toggleFavorite(book: Book)

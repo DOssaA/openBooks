@@ -43,4 +43,23 @@ class BooksRepositoryTest {
             }
             verifySuspend { remote.search("dickens", page = 2) }
         }
+
+    @Test
+    fun `getBook delegates to the remote source`() =
+        runTest {
+            val book =
+                Book(
+                    key = "OL45804W",
+                    title = "Oliver Twist",
+                    authors = emptyList(),
+                    coverUrl = null,
+                    firstPublishYear = null,
+                    description = "A full description.",
+                )
+            everySuspend { remote.getBook("OL45804W") } returns book
+
+            repository.getBook("OL45804W") shouldBe book
+
+            verifySuspend { remote.getBook("OL45804W") }
+        }
 }

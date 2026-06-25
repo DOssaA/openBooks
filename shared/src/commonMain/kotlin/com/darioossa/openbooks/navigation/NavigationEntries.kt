@@ -6,6 +6,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
+import com.darioossa.openbooks.presentation.bookDetail.BookDetailScreen
 import com.darioossa.openbooks.presentation.bookList.BookListScreen
 
 @Composable
@@ -21,8 +22,8 @@ fun EntryProviderScope<Route>.BooksListEntry() {
 fun EntryProviderScope<Route>.BookDetailEntry() {
     entry<BookDetail>(
         metadata = ListDetailSceneStrategy.detailPane(),
-    ) { book ->
-        // Screen content
+    ) { route ->
+        BookDetailScreen(book = route.book)
     }
 }
 

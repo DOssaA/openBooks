@@ -78,6 +78,8 @@ kotlin {
             implementation(libs.koin.compose.nav3)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
