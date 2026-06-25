@@ -1,4 +1,4 @@
-package com.darioossa.openbooks.data.local
+package com.darioossa.openbooks.data.remote
 
 interface BooksRemoteSource
 

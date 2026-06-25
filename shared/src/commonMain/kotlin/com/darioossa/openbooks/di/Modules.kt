@@ -1,10 +1,10 @@
 package com.darioossa.openbooks.di
 
 import com.darioossa.openbooks.data.BooksRepository
-import com.darioossa.openbooks.data.local.BooksRemote
-import com.darioossa.openbooks.data.local.BooksRemoteSource
-import com.darioossa.openbooks.data.remote.BooksLocal
-import com.darioossa.openbooks.data.remote.BooksLocalSource
+import com.darioossa.openbooks.data.local.BooksLocal
+import com.darioossa.openbooks.data.local.BooksLocalSource
+import com.darioossa.openbooks.data.remote.BooksRemote
+import com.darioossa.openbooks.data.remote.BooksRemoteSource
 import com.darioossa.openbooks.domain.SearchBooksUseCase
 import com.darioossa.openbooks.domain.dataSource.BooksDataSource
 import com.darioossa.openbooks.presentation.bookList.BooksListViewModel

@@ -52,10 +52,12 @@ Replace the discarded auto-load-on-`init` behaviour with a **reactive, search-dr
 
 Network source currently lives in `data.local`, DB source in `data.remote`. Correct so `data.remote` = network, `data.local` = database.
 
+**Status: ✅ done.** Sources moved to their correct packages; imports updated; `detektAll ktlintAll :shared:allTests :androidApp:lintDebug assembleDebug` all pass locally.
+
 **Acceptance criteria**
-- [ ] `BooksRemoteSource`/`BooksRemote` → `data.remote`; `BooksLocalSource`/`BooksLocal` → `data.local`.
-- [ ] Imports updated in `BooksRepository` and `Modules`.
-- [ ] Build + tests green.
+- [x] `BooksRemoteSource`/`BooksRemote` → `data.remote`; `BooksLocalSource`/`BooksLocal` → `data.local`.
+- [x] Imports updated in `BooksRepository` and `Modules`.
+- [x] Build + tests green.
 
 ## Issue 3 — Room-KMP persistence spike (favorites) ⚠ highest time-risk
 **Labels:** `feature` `data` `priority:1` · **Depends on:** Issue 2
