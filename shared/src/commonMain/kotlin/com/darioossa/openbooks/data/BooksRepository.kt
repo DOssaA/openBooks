@@ -17,6 +17,8 @@ class BooksRepository(
         page: Int,
     ): Flow<SearchBooksPage> = flow { emit(remoteSource.search(query, page)) }
 
+    override fun observeFavorites(): Flow<List<Book>> = localSource.observeFavorites()
+
     override fun observeFavoriteKeys(): Flow<Set<String>> = localSource.observeFavoriteKeys()
 
     override suspend fun toggleFavorite(book: Book) = localSource.toggleFavorite(book)

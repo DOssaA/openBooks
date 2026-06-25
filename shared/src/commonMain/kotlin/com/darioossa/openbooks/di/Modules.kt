@@ -7,10 +7,12 @@ import com.darioossa.openbooks.data.remote.BooksRemote
 import com.darioossa.openbooks.data.remote.BooksRemoteSource
 import com.darioossa.openbooks.data.remote.provideHttpClient
 import com.darioossa.openbooks.domain.ObserveFavoriteKeysUseCase
+import com.darioossa.openbooks.domain.ObserveFavoritesUseCase
 import com.darioossa.openbooks.domain.SearchBooksUseCase
 import com.darioossa.openbooks.domain.ToggleFavoriteUseCase
 import com.darioossa.openbooks.domain.dataSource.BooksDataSource
 import com.darioossa.openbooks.presentation.bookList.BooksListViewModel
+import com.darioossa.openbooks.presentation.favorites.FavoritesViewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
@@ -34,6 +36,7 @@ val domainModule =
     module {
         includes(dataModule)
         factory<ObserveFavoriteKeysUseCase>()
+        factory<ObserveFavoritesUseCase>()
         factory<SearchBooksUseCase>()
         factory<ToggleFavoriteUseCase>()
     }
@@ -42,6 +45,7 @@ val presentationModule =
     module {
         includes(domainModule)
         viewModel<BooksListViewModel>()
+        viewModel<FavoritesViewModel>()
     }
 
 expect val platformModule: Module
