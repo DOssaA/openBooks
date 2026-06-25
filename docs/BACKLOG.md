@@ -137,6 +137,8 @@ Replace `Book(title, description)` with `key`, `title`, `authors`, `coverUrl`, `
 
 Ensure the suite covers the critical logic (list VM, detail/favorites VM, repository) — at least the 3–5 the challenge asks for.
 
+**Status: ✅ done.** Audited the suite — list VM (6), detail VM (4), favorites VM (3), remote/mappers (7) were already covered well past the 3–5 bar. The one real gap was the **repository's favorites half**: `observeFavorites`/`observeFavoriteKeys`/`toggleFavorite` delegate to the local source but were untested (only `searchBooks`/`getBook` were). Added 3 delegation tests to `BooksRepositoryTest`, rounding out its full `BooksDataSource` contract. `detektAll ktlintAll :shared:allTests` green locally. Test-only change; no production code touched.
+
 ## Issue 11 — README: install/run, decisions, trade-offs, not-done + remove false CI claims
 **Labels:** `docs` `priority:2` · **Depends on:** all above
 
