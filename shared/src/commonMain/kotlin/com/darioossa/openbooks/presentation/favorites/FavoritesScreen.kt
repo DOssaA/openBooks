@@ -21,6 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.darioossa.openbooks.domain.entities.Book
+import openbooks.shared.generated.resources.Res
+import openbooks.shared.generated.resources.favorites_empty
+import openbooks.shared.generated.resources.favorites_remove
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -47,7 +51,7 @@ internal fun FavoritesContent(
         FavoritesState.Empty ->
             Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No favorites yet",
+                    text = stringResource(Res.string.favorites_empty),
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }
@@ -83,7 +87,7 @@ private fun FavoriteRow(
             }
         }
         TextButton(onClick = onRemove) {
-            Text("Remove")
+            Text(stringResource(Res.string.favorites_remove))
         }
     }
 }
