@@ -10,9 +10,20 @@ plugins {
     alias(libs.plugins.mokkery)
     alias(libs.plugins.allOpen) // for tests only
     alias(libs.plugins.koin)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 kotlin {
+    compilerOptions {
+        // Room generates an `actual object` for the @ConstructedBy database constructor.
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     android {
         namespace = "com.darioossa.openbooks.shared"
         compileSdk =
@@ -32,6 +43,9 @@ kotlin {
         }
         withHostTest {
             isIncludeAndroidResources = true
+        }
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
 
@@ -62,6 +76,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewModel)
             implementation(libs.koin.compose.nav3)
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -70,6 +86,18 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.koin.test)
             implementation(libs.ktor.client.mock)
+        }
+        getByName("androidHostTest").dependencies {
+            // Room's Android builder needs a Context; Robolectric provides one on the JVM host.
+            implementation(libs.robolectric)
+            implementation(libs.androidx.test.core)
+        }
+        getByName("androidDeviceTest").dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.androidx.test.core)
+            implementation(libs.androidx.test.runner)
+            implementation(libs.androidx.testExt.junit)
         }
     }
 }
@@ -87,4 +115,5 @@ if (isTestingTask) {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+    ksp(libs.room.compiler)
 }
