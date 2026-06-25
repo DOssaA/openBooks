@@ -1,5 +1,8 @@
 package com.darioossa.openbooks.domain.entities
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Book(
     val key: String,
     val title: String,

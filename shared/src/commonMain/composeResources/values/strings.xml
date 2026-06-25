@@ -17,4 +17,13 @@
     <string name="error_title">Oops, something went wrong</string>
     <string name="error_desc">We failed to connect to the server. Please check your internet connection.</string>
     <string name="retry">Retry</string>
+    <string name="favorites_empty">No favorites yet</string>
+    <string name="favorites_remove">Remove</string>
+    <string name="detail_error">Couldn\'t load this book.</string>
+    <string name="detail_retry">Retry</string>
+    <string name="detail_cover_cd">Cover of %1$s</string>
+    <string name="detail_first_published">First published %1$d</string>
+    <string name="detail_favorite_add">♡ Add to favorites</string>
+    <string name="detail_favorite_added">♥ In favorites</string>
+    <string name="detail_no_description">No description available.</string>
 </resources>

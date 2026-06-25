@@ -117,10 +117,12 @@ Replace `Book(title, description)` with `key`, `title`, `authors`, `coverUrl`, `
 ## Issue 8 — `FavoritesScreen` + ViewModel
 **Labels:** `feature` `priority:2` · **Depends on:** Issue 3
 
+**Status: ✅ done.** Favorites flow surfaced from Room through `ObserveFavoritesUseCase`; VM exposes `Loading | Empty | Content` via `stateIn`; screen renders with remove (reusing `ToggleFavoriteUseCase`) and empty state; entry renders `FavoritesScreen`. VM unit-tested + a Robolectric Compose UI test (`createComposeRule`/`runComposeUiTest`) cover the screen.
+
 **Acceptance criteria**
-- [ ] VM observes `Flow<List<Favorite>>` (plain Flow, **not** paged).
-- [ ] Screen lists favorites with remove; handles empty state.
-- [ ] Wired into navigation (`FavoritesList`). VM tested.
+- [x] VM observes a plain (non-paged) Flow. *Deviation:* exposes `Flow<List<Book>>` (data layer maps `Favorite → Book`) rather than the Room `Favorite` entity, to keep the Room type out of the presentation layer.
+- [x] Screen lists favorites with remove; handles empty state.
+- [x] Wired into navigation (`FavoritesList`). VM tested. *Note:* `FavoritesEntry` renders the screen, but no entry-point trigger pushes `FavoritesList` yet — that arrives with Issue 7's `BooksListScreen`. Runtime coverage is provided by the Compose UI test instead.
 
 ## Issue 9 — `BookDetailScreen` + ViewModel
 **Labels:** `feature` `priority:2` · **Depends on:** Issues 4, 5
@@ -134,6 +136,8 @@ Replace `Book(title, description)` with `key`, `title`, `authors`, `coverUrl`, `
 **Labels:** `test` `priority:2` · **Depends on:** Issues 6, 8, 9
 
 Ensure the suite covers the critical logic (list VM, detail/favorites VM, repository) — at least the 3–5 the challenge asks for.
+
+**Status: ✅ done.** Audited the suite — list VM (6), detail VM (4), favorites VM (3), remote/mappers (7) were already covered well past the 3–5 bar. The one real gap was the **repository's favorites half**: `observeFavorites`/`observeFavoriteKeys`/`toggleFavorite` delegate to the local source but were untested (only `searchBooks`/`getBook` were). Added 3 delegation tests to `BooksRepositoryTest`, rounding out its full `BooksDataSource` contract. `detektAll ktlintAll :shared:allTests` green locally. Test-only change; no production code touched.
 
 ## Issue 11 — README: install/run, decisions, trade-offs, not-done + remove false CI claims
 **Labels:** `docs` `priority:2` · **Depends on:** all above

@@ -81,6 +81,8 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -94,6 +96,10 @@ kotlin {
             // Room's Android builder needs a Context; Robolectric provides one on the JVM host.
             implementation(libs.robolectric)
             implementation(libs.androidx.test.core)
+            // Compose UI tests run on the JVM host via Robolectric (no device needed).
+            implementation(libs.compose.uiTest)
+            implementation(libs.compose.uiTestJunit4)
+            implementation(libs.compose.uiTestManifest)
         }
         getByName("androidDeviceTest").dependencies {
             implementation(libs.kotlin.test)
