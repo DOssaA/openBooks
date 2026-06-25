@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -46,7 +45,7 @@ class BooksListViewModel(
         viewModelScope.launch {
             _query
                 .debounce(DEBOUNCE_MS)
-                .distinctUntilChanged()
+                // .distinctUntilChanged()
                 .collectLatest { rawQuery ->
                     val trimmed = rawQuery.trim()
                     activeQuery = trimmed

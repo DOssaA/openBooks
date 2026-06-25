@@ -6,16 +6,23 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
+import com.darioossa.openbooks.domain.entities.Book
 import com.darioossa.openbooks.presentation.bookDetail.BookDetailScreen
 import com.darioossa.openbooks.presentation.bookList.BookListScreen
 import com.darioossa.openbooks.presentation.favorites.FavoritesScreen
 
 @Composable
-fun EntryProviderScope<Route>.BooksListEntry() {
+fun EntryProviderScope<Route>.BooksListEntry(
+    onBookClick: (Book) -> Unit,
+    onFavoritesClick: () -> Unit,
+) {
     entry<BooksList>(
         metadata = ListDetailSceneStrategy.listPane(),
     ) {
-        BookListScreen()
+        BookListScreen(
+            onBookClick = onBookClick,
+            onFavoritesClick = onFavoritesClick,
+        )
     }
 }
 
