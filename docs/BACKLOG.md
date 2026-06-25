@@ -109,10 +109,10 @@ Replace `Book(title, description)` with `key`, `title`, `authors`, `coverUrl`, `
 **Labels:** `feature` `ui` `priority:1` · **Depends on:** Issue 6
 
 **Acceptance criteria**
-- [ ] Search bar; `LazyColumn` of thin items (cover via Coil 3, title, author, favorite control).
-- [ ] Infinite scroll via `derivedStateOf` over `LazyListState`.
-- [ ] Renders Idle / Loading / Empty / Error / Success.
-- [ ] `collectAsStateWithLifecycle()`; no business logic in the composable.
+- [x] Search bar; `LazyColumn` of thin items (cover via Coil 3, title, author, favorite control).
+- [x] Infinite scroll via `derivedStateOf` over `LazyListState`.
+- [x] Renders Idle / Loading / Empty / Error / Success.
+- [x] `collectAsStateWithLifecycle()`; no business logic in the composable.
 
 ## Issue 8 — `FavoritesScreen` + ViewModel
 **Labels:** `feature` `priority:2` · **Depends on:** Issue 3
