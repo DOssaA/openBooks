@@ -19,6 +19,8 @@ class BooksRepository(
 
     override suspend fun getBook(key: String): Book = remoteSource.getBook(key)
 
+    override fun observeFavorites(): Flow<List<Book>> = localSource.observeFavorites()
+
     override fun observeFavoriteKeys(): Flow<Set<String>> = localSource.observeFavoriteKeys()
 
     override suspend fun toggleFavorite(book: Book) = localSource.toggleFavorite(book)

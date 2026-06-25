@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface BooksLocalSource {
+    fun observeFavorites(): Flow<List<Book>>
+
     fun observeFavoriteKeys(): Flow<Set<String>>
 
     suspend fun toggleFavorite(book: Book)
@@ -13,6 +15,11 @@ interface BooksLocalSource {
 class BooksLocal(
     private val favoritesDao: FavoritesDao,
 ) : BooksLocalSource {
+    override fun observeFavorites(): Flow<List<Book>> =
+        favoritesDao
+            .observeFavorites()
+            .map { favorites -> favorites.map { it.toBook() } }
+
     override fun observeFavoriteKeys(): Flow<Set<String>> =
         favoritesDao
             .observeFavorites()
@@ -32,5 +39,14 @@ class BooksLocal(
             title = title,
             author = authors.joinToString(),
             coverUrl = coverUrl,
+        )
+
+    private fun Favorite.toBook(): Book =
+        Book(
+            key = workKey,
+            title = title,
+            authors = if (author.isBlank()) emptyList() else author.split(", "),
+            coverUrl = coverUrl,
+            firstPublishYear = null,
         )
 }

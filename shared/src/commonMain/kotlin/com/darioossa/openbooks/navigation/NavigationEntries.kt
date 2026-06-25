@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import com.darioossa.openbooks.presentation.bookDetail.BookDetailScreen
 import com.darioossa.openbooks.presentation.bookList.BookListScreen
+import com.darioossa.openbooks.presentation.favorites.FavoritesScreen
 
 @Composable
 fun EntryProviderScope<Route>.BooksListEntry() {
@@ -32,6 +33,6 @@ fun EntryProviderScope<Route>.FavoritesEntry() {
     entry<FavoritesList>(
         metadata = ListDetailSceneStrategy.extraPane(),
     ) {
-        // Screen content
+        FavoritesScreen()
     }
 }
