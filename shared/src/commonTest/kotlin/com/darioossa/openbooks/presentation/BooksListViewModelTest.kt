@@ -32,12 +32,18 @@ class BooksListViewModelTest : BaseViewModelTest() {
             val list =
                 listOf(
                     Book(
-                        "Oliver Twist",
-                        "Famous book about criticism on social issues by Charles Dickens",
+                        key = "OL45804W",
+                        title = "Oliver Twist",
+                        authors = listOf("Charles Dickens"),
+                        coverUrl = null,
+                        firstPublishYear = 1838,
                     ),
                     Book(
-                        "A Christmas Carol",
-                        "One of the best short novels about Christmas.",
+                        key = "OL27448W",
+                        title = "A Christmas Carol",
+                        authors = listOf("Charles Dickens"),
+                        coverUrl = null,
+                        firstPublishYear = 1843,
                     ),
                 )
             val query = "Charles D"

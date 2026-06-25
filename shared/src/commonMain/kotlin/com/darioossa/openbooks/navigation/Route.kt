@@ -9,7 +9,7 @@ sealed interface Route : NavKey
 data object BooksList : Route
 
 data class BookDetail(
-    val id: String,
+    val key: String,
 ) : Route
 
 data object FavoritesList : Route

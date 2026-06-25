@@ -76,8 +76,8 @@ Stand up Room 2.7+ in KMP. Front-load this — if the wiring fights, find out at
 Replace `Book(title, description)` with `key`, `title`, `authors`, `coverUrl`, `firstPublishYear`, `description?`.
 
 **Acceptance criteria**
-- [ ] Entity updated; navigation `BookDetail(id)` uses the Work `key`.
-- [ ] Existing references/tests compile.
+- [x] Entity updated; navigation `BookDetail(id)` uses the Work `key`.
+- [x] Existing references/tests compile.
 
 ## Issue 5 — Ktor + OpenLibrary Search API remote source
 **Labels:** `feature` `data` `priority:1` · **Depends on:** Issues 2, 4
