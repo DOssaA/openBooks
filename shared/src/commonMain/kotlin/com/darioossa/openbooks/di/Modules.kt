@@ -6,7 +6,9 @@ import com.darioossa.openbooks.data.local.BooksLocalSource
 import com.darioossa.openbooks.data.remote.BooksRemote
 import com.darioossa.openbooks.data.remote.BooksRemoteSource
 import com.darioossa.openbooks.data.remote.provideHttpClient
+import com.darioossa.openbooks.domain.ObserveFavoriteKeysUseCase
 import com.darioossa.openbooks.domain.SearchBooksUseCase
+import com.darioossa.openbooks.domain.ToggleFavoriteUseCase
 import com.darioossa.openbooks.domain.dataSource.BooksDataSource
 import com.darioossa.openbooks.presentation.bookList.BooksListViewModel
 import org.koin.core.module.Module
@@ -19,6 +21,7 @@ import org.koin.plugin.module.dsl.viewModel
 
 val dataModule =
     module {
+        includes(platformModule)
         // The compiler plugin can't construct a manually-configured HttpClient, so it is provided
         // through `create(::factory)` — which still registers the type in the plugin's DSL graph.
         single { create(::provideHttpClient) }
@@ -30,7 +33,9 @@ val dataModule =
 val domainModule =
     module {
         includes(dataModule)
+        factory<ObserveFavoriteKeysUseCase>()
         factory<SearchBooksUseCase>()
+        factory<ToggleFavoriteUseCase>()
     }
 
 val presentationModule =

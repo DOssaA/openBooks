@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 
 @OpenForTest
-class SearchBooksUseCase(
+class ObserveFavoriteKeysUseCase(
     private val dataSource: BooksDataSource,
 ) {
-    suspend operator fun invoke(
-        query: String,
-        page: Int,
-    ): Flow<SearchBooksPage> = dataSource.searchBooks(query, page).flowOn(Dispatchers.IO)
+    operator fun invoke(): Flow<Set<String>> =
+        dataSource
+            .observeFavoriteKeys()
+            .flowOn(Dispatchers.IO)
 }

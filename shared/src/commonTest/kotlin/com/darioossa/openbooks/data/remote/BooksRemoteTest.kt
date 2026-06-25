@@ -30,22 +30,23 @@ class BooksRemoteTest {
             var requested = ""
             val body =
                 """
-                { "numFound": 1, "docs": [
+                { "numFound": 50, "docs": [
                   { "key": "/works/OL45804W", "title": "Oliver Twist",
                     "author_name": ["Charles Dickens"], "cover_i": 12345, "first_publish_year": 1838 }
                 ] }
                 """.trimIndent()
             val remote = remoteReturning(body) { requested = it }
 
-            val books = remote.search(query = "oliver twist", page = 2)
+            val page = remote.search(query = "oliver twist", page = 2)
 
             requested.shouldContainPath("/search.json")
             requested.shouldContainParam("q=oliver")
             requested.shouldContainParam("page=2")
             requested.shouldContainParam("limit=")
-            books.size shouldBe 1
-            books.first().key shouldBe "OL45804W"
-            books.first().coverUrl shouldBe "https://covers.openlibrary.org/b/id/12345-M.jpg"
+            page.books.size shouldBe 1
+            page.books.first().key shouldBe "OL45804W"
+            page.books.first().coverUrl shouldBe "https://covers.openlibrary.org/b/id/12345-M.jpg"
+            page.endReached shouldBe false
         }
 
     @Test

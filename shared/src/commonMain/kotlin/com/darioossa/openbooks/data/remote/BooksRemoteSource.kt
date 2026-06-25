@@ -2,6 +2,7 @@ package com.darioossa.openbooks.data.remote
 
 import com.darioossa.openbooks.data.remote.dto.SearchResponseDto
 import com.darioossa.openbooks.data.remote.dto.WorkDto
+import com.darioossa.openbooks.domain.SearchBooksPage
 import com.darioossa.openbooks.domain.entities.Book
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -12,7 +13,7 @@ interface BooksRemoteSource {
     suspend fun search(
         query: String,
         page: Int,
-    ): List<Book>
+    ): SearchBooksPage
 
     suspend fun getBook(key: String): Book
 }
@@ -23,7 +24,7 @@ class BooksRemote(
     override suspend fun search(
         query: String,
         page: Int,
-    ): List<Book> {
+    ): SearchBooksPage {
         val response: SearchResponseDto =
             client
                 .get("/search.json") {
@@ -31,7 +32,10 @@ class BooksRemote(
                     parameter("page", page)
                     parameter("limit", PAGE_SIZE)
                 }.body()
-        return response.docs.map { it.toBook() }
+        return SearchBooksPage(
+            books = response.docs.map { it.toBook() },
+            endReached = page * PAGE_SIZE >= response.numFound || response.docs.isEmpty(),
+        )
     }
 
     override suspend fun getBook(key: String): Book {
