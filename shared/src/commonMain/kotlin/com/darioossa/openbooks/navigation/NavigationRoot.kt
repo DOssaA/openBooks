@@ -23,7 +23,7 @@ fun NavigationRoot() {
             slideInHorizontally(initialOffsetX = { it }) togetherWith
                 slideOutHorizontally(targetOffsetX = { -it })
         },
-        sceneStrategy = strategy,
+        sceneStrategies = listOf(strategy),
         entryProvider =
             entryProvider<Route> {
                 BooksListEntry()

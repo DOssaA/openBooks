@@ -7,10 +7,13 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kover)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.mokkery)
+    alias(libs.plugins.allOpen) // for tests only
+    alias(libs.plugins.koin)
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.darioossa.openbooks.shared"
         compileSdk =
             libs.versions.android.compileSdk
@@ -49,10 +52,31 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodelNav3)
             implementation(libs.jetbrains.material3.adaptiveNav3)
             implementation(libs.kotlinx.serialization.json)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.annotations)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewModel)
+            implementation(libs.koin.compose.nav3)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.kotest)
+            implementation(libs.turbine)
+            implementation(libs.koin.test)
         }
+    }
+}
+
+val isTestingTask =
+    gradle.startParameter.taskNames.any {
+        it.contains("test", ignoreCase = true) || it.contains("connectedCheck", ignoreCase = true)
+    }
+
+if (isTestingTask) {
+    allOpen {
+        annotation("com.darioossa.openbooks.OpenForTest")
     }
 }
 
