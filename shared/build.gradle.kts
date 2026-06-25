@@ -52,6 +52,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -66,6 +67,9 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodelNav3)
             implementation(libs.jetbrains.material3.adaptiveNav3)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.serialization.kotlinxJson)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.annotations)
@@ -81,6 +85,7 @@ kotlin {
             implementation(libs.kotest)
             implementation(libs.turbine)
             implementation(libs.koin.test)
+            implementation(libs.ktor.client.mock)
         }
         getByName("androidHostTest").dependencies {
             // Room's Android builder needs a Context; Robolectric provides one on the JVM host.
