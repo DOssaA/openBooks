@@ -9,11 +9,17 @@ import androidx.navigation3.runtime.EntryProviderScope
 import com.darioossa.openbooks.presentation.bookList.BookListScreen
 
 @Composable
-fun EntryProviderScope<Route>.BooksListEntry() {
+fun EntryProviderScope<Route>.BooksListEntry(
+    onBookClick: (String) -> Unit,
+    onFavoritesClick: () -> Unit,
+) {
     entry<BooksList>(
         metadata = ListDetailSceneStrategy.listPane(),
     ) {
-        BookListScreen()
+        BookListScreen(
+            onBookClick = onBookClick,
+            onFavoritesClick = onFavoritesClick,
+        )
     }
 }
 

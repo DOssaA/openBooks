@@ -26,7 +26,18 @@ fun NavigationRoot() {
         sceneStrategies = listOf(strategy),
         entryProvider =
             entryProvider<Route> {
-                BooksListEntry()
+                BooksListEntry(
+                    onBookClick = { key ->
+                        if (backStack.lastOrNull() != BookDetail(key)) {
+                            backStack.add(BookDetail(key))
+                        }
+                    },
+                    onFavoritesClick = {
+                        if (backStack.lastOrNull() != FavoritesList) {
+                            backStack.add(FavoritesList)
+                        }
+                    },
+                )
                 BookDetailEntry()
                 FavoritesEntry()
             },
