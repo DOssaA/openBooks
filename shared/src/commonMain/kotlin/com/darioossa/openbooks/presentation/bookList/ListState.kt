@@ -2,14 +2,18 @@ package com.darioossa.openbooks.presentation.bookList
 
 import com.darioossa.openbooks.domain.entities.Book
 
-sealed class ListState {
-    data object Empty : ListState()
+sealed interface ListState {
+    data object Idle : ListState
 
-    data object Loading : ListState()
+    data object Loading : ListState
 
     data class Success(
-        val booksList: List<Book>,
-    ) : ListState()
+        val books: List<Book>,
+        val loadingMore: Boolean,
+        val endReached: Boolean,
+    ) : ListState
 
-    data object Error : ListState()
+    data object Empty : ListState
+
+    data object Error : ListState
 }

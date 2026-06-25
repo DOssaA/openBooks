@@ -26,7 +26,7 @@ class BookMappersTest {
         book.title shouldBe "Oliver Twist"
         book.authors shouldBe listOf("Charles Dickens")
         book.coverUrl shouldBe "https://covers.openlibrary.org/b/id/12345-M.jpg"
-        book.firstPublishYear shouldBe 1838
+        book.firstPublishYear shouldBe OLIVER_TWIST_FIRST_PUBLISH_YEAR
         book.description shouldBe null
     }
 
@@ -69,5 +69,9 @@ class BookMappersTest {
         val book = json.decodeFromString<WorkDto>(payload).toBook()
 
         book.coverUrl shouldBe "https://covers.openlibrary.org/b/id/99-M.jpg"
+    }
+
+    private companion object {
+        const val OLIVER_TWIST_FIRST_PUBLISH_YEAR = 1838
     }
 }

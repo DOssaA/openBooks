@@ -64,11 +64,13 @@ Network source currently lives in `data.local`, DB source in `data.remote`. Corr
 
 Stand up Room 2.7+ in KMP. Front-load this — if the wiring fights, find out at hour 1.
 
+**Status: ✅ done.** Room KMP favorites are wired through `FavoritesDao`/`FavoritesDatabase`, Android uses the bundled SQLite driver, and host tests prove persistence across a database reopen.
+
 **Acceptance criteria**
-- [ ] `Favorite` entity (Work key as PK; title, author, coverUrl).
-- [ ] DAO: `observeFavorites(): Flow<List<Favorite>>`, `upsert`, `delete`, `isFavorite`.
-- [ ] Database + bundled SQLite driver; `expect`/`actual` builder wired into Koin `platformModule` (Android `actual`).
-- [ ] Proven to persist across app restart on Android.
+- [x] `Favorite` entity (Work key as PK; title, author, coverUrl).
+- [x] DAO: `observeFavorites(): Flow<List<Favorite>>`, `upsert`, `delete`, `isFavorite`.
+- [x] Database + bundled SQLite driver; `expect`/`actual` builder wired into Koin `platformModule` (Android `actual`).
+- [x] Proven to persist across app restart on Android.
 
 ## Issue 4 — Reshape `Book` entity
 **Labels:** `refactor` `domain` `priority:1` · **Depends on:** Issue 1
@@ -82,22 +84,26 @@ Replace `Book(title, description)` with `key`, `title`, `authors`, `coverUrl`, `
 ## Issue 5 — Ktor + OpenLibrary Search API remote source
 **Labels:** `feature` `data` `priority:1` · **Depends on:** Issues 2, 4
 
+**Status: ✅ done.** Ktor/OpenLibrary search and work detail are implemented in `commonMain`; search returns page metadata for manual pagination, and repository now exposes local favorite state/toggle beside remote search.
+
 **Acceptance criteria**
-- [ ] Ktor client (+ content negotiation / kotlinx-serialization) in `commonMain`.
-- [ ] `search(query, page)` against `/search.json?q=&page=&limit=`; DTO → `Book` mapping (`cover_i` → `coverUrl`).
-- [ ] `getBook(key)` against `/works/{key}.json` for the description.
-- [ ] Repository merges remote results with local favorite state.
-- [ ] Mapper/repository unit tests.
+- [x] Ktor client (+ content negotiation / kotlinx-serialization) in `commonMain`.
+- [x] `search(query, page)` against `/search.json?q=&page=&limit=`; DTO → `Book` mapping (`cover_i` → `coverUrl`).
+- [x] `getBook(key)` against `/works/{key}.json` for the description.
+- [x] Repository merges remote results with local favorite state.
+- [x] Mapper/repository unit tests.
 
 ## Issue 6 — `BooksListViewModel`: search, paging, states, favorite toggle (TDD)
 **Labels:** `feature` `presentation` `priority:1` · **Depends on:** Issues 3, 5
 
+**Status: ✅ done.** Implemented test-first: debounced query search, first-page states, manual next-page append, favorite-key observation, and favorite toggle through Room-backed use cases.
+
 **Acceptance criteria**
-- [ ] Debounced query input drives search.
-- [ ] State model `Idle | Loading | Success(books, loadingMore, endReached) | Empty | Error`.
-- [ ] Manual pagination: load next `page` and append.
-- [ ] Toggle favorite from a list item (writes through Room).
-- [ ] Tests cover each state transition + paging append + favorite toggle.
+- [x] Debounced query input drives search.
+- [x] State model `Idle | Loading | Success(books, loadingMore, endReached) | Empty | Error`.
+- [x] Manual pagination: load next `page` and append.
+- [x] Toggle favorite from a list item (writes through Room).
+- [x] Tests cover each state transition + paging append + favorite toggle.
 
 ## Issue 7 — `BooksListScreen` UI
 **Labels:** `feature` `ui` `priority:1` · **Depends on:** Issue 6

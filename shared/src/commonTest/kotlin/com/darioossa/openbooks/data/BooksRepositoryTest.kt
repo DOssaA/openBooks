@@ -3,6 +3,7 @@ package com.darioossa.openbooks.data
 import app.cash.turbine.test
 import com.darioossa.openbooks.data.local.BooksLocalSource
 import com.darioossa.openbooks.data.remote.BooksRemoteSource
+import com.darioossa.openbooks.domain.SearchBooksPage
 import com.darioossa.openbooks.domain.entities.Book
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
@@ -18,24 +19,28 @@ class BooksRepositoryTest {
     private val repository = BooksRepository(remote, local)
 
     @Test
-    fun `searchBooks delegates to the remote source and emits its results`() =
+    fun `searchBooks delegates to the remote source and emits its page`() =
         runTest {
-            val books =
-                listOf(
-                    Book(
-                        key = "OL45804W",
-                        title = "Oliver Twist",
-                        authors = listOf("Charles Dickens"),
-                        coverUrl = null,
-                        firstPublishYear = 1838,
-                    ),
+            val page =
+                SearchBooksPage(
+                    books =
+                        listOf(
+                            Book(
+                                key = "OL45804W",
+                                title = "Oliver Twist",
+                                authors = listOf("Charles Dickens"),
+                                coverUrl = null,
+                                firstPublishYear = 1838,
+                            ),
+                        ),
+                    endReached = false,
                 )
-            everySuspend { remote.search("dickens", page = 1) } returns books
+            everySuspend { remote.search("dickens", page = 2) } returns page
 
-            repository.searchBooks("dickens").test {
-                awaitItem() shouldBe books
+            repository.searchBooks("dickens", page = 2).test {
+                awaitItem() shouldBe page
                 awaitComplete()
             }
-            verifySuspend { remote.search("dickens", page = 1) }
+            verifySuspend { remote.search("dickens", page = 2) }
         }
 }
